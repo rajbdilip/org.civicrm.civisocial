@@ -3,7 +3,7 @@
  * Create a social user.
  *
  * @param array $params
- * 
+ *
  * @return int|bool
  *   Returns ID if exits, FALSE otherwise
  */
@@ -16,7 +16,7 @@ function civicrm_api3_civisocial_user_socialUserExists($params) {
  * Create a social user.
  *
  * @param array $params
- * 
+ *
  * @return array
  *   Array of created values
  */
@@ -29,12 +29,11 @@ function civicrm_api3_civisocial_user_create($params) {
  * Creates a contact if doesn't exist and returns it's id.
  *
  * @param array $params
- * 
+ *
  * @return int
  *   Contact id of created/existing contact
  */
 function civicrm_api3_civisocial_user_createContact($params) {
-	// @todo: Add `email` after fixing Twitter's email retrieval
-  civicrm_api3_verify_mandatory($params, NULL, array('contact_type'));
+  civicrm_api3_verify_mandatory($params, NULL, array('contact_type', 'email'));
   return CRM_Civisocial_BAO_CivisocialUser::createContact($params);
 }
