@@ -107,7 +107,7 @@ class CRM_Civisocial_OAuthProvider_Googleplus extends CRM_Civisocial_OAuthProvid
 
     $response = $this->post('token', $params);
     $accessToken = CRM_Utils_Array::value('access_token', $response);
-    $this->token = $accessToken;
+    $this->setAccessToken($accessToken);
 
     // @todo: Get long-lived token
 

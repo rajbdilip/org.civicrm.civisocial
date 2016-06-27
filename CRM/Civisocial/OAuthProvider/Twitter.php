@@ -66,9 +66,8 @@ class CRM_Civisocial_OAuthProvider_Twitter extends CRM_Civisocial_OAuthProvider 
       $this->redirect();
     }
 
-    $this->token = new OAuthConsumer($requestToken['oauth_token'], $requestToken['oauth_token_secret']);
-
     // Request Access Token from twitter
+    $this->setAccessToken($requestToken);
     $accessToken = $this->getAccessToken($_REQUEST['oauth_verifier']);
     unset($accessToken['user_id']);
     unset($accessToken['screen_name']);
@@ -77,10 +76,8 @@ class CRM_Civisocial_OAuthProvider_Twitter extends CRM_Civisocial_OAuthProvider 
     // Remove no longer needed request tokens
     $session->set('oauth_token', NULL);
     $session->set('oauth_token_secret', NULL);
-    //@todo: Can't I UNSET using Session class?
 
-    $this->token = new OAuthConsumer($accessToken['oauth_token'], $accessToken['oauth_token_secret']);
-
+    $this->setAccessToken($accessToken);
     if ($this->isAuthorized()) {
       $this->saveSocialUser($this->alias, $this->getUserProfile(), $accessToken);
     }

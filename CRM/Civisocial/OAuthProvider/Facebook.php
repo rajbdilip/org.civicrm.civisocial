@@ -119,9 +119,18 @@ class CRM_Civisocial_OAuthProvider_Facebook extends CRM_Civisocial_OAuthProvider
     $this->setAccessToken($accessToken);
     $deniedPermissions = $this->checkPermissions($this->getBasicPermissions());
     if (!empty($deniedPermissions)) {
-      CRM_Utils_System::redirect($this->getLoginUri($deniedPermissions, TRUE));
-      // @todo: It would be better if we inform first (eg. You need to provide
-      //      email to continue) and then provide a link to re-authorize
+      $permRequested = $session->get("{$this->alias}_perms_requested");
+      if ($permRequested) {
+        // Page permissions were requested but denied
+        $session->set("{$this->alias}_perms_requested", NULL);
+        $session->set("{$this->alias}_perms_denied", TRUE);
+        $this->redirect(TRUE);
+      }
+      else {
+        // Request for permission
+        $session->set("{$this->alias}_perms_requested", TRUE);
+        $this->getLoginUri($deniedPermissions, TRUE);
+      }
     }
 
     // Authentication is successful. Fetch user profile
