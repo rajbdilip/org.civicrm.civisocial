@@ -115,4 +115,28 @@ CRM.$(function($) {
   window.hideLoader = function(elem) {
     $(elem).parent().children('.loader').remove();
   };
+
+  window.processAjaxResult = function(resultType, data, postData) {
+    var nextBtn = $('#' + resultType + '-next').parent();
+    var prevBtn = $('#' + resultType + '-prev').parent();
+
+    if (data.length === 0) {
+      if ('next' in postData) {
+        $(nextBtn).hide();
+      }
+      else {
+        $(prevBtn).hide();
+      }
+      return;
+    }
+
+    if (!$(nextBtn).is(':visible')) {
+      $(nextBtn).show();
+    }
+    if (!$(prevBtn).is(':visible')) {
+      $(prevBtn).show();
+    }
+
+    $('#' + resultType).empty();
+  }
 });

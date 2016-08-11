@@ -334,6 +334,12 @@ function civicrm_api3_civisocial_user_getTwitterFeed($params) {
       $tweets = array();
       foreach ($result as $tweetItem) {
         $tweet = array();
+
+        if (isset($tweetItem['retweeted_status'])) {
+          $tweetItem = $tweetItem['retweeted_status'];
+          $tweet['retweeted'] = TRUE;
+        }
+
         $tweet['id'] = $tweetItem['id'];
         $tweet['text'] = parseScreenName(urlify($tweetItem['text']));
         $tweet['time'] = date('d M, Y H:i:A', strtotime($tweetItem['created_at']));
@@ -362,6 +368,58 @@ function civicrm_api3_civisocial_user_getTwitterFeed($params) {
       $response['data'] = $tweets;
       $response['since_id'] = $tweets[0]['id'];
       $response['max_id'] = $maxId;
+
+      return civicrm_api3_create_success($response);
+    }
+    else {
+      return civicrm_api3_create_error(ts('Invalid Twitter access token.'));
+    }
+  }
+  else {
+    return civicrm_api3_create_error(ts('Not connected to Twitter.'));
+  }
+}
+
+/**
+ * Get Twitter followers
+ *
+ * @param array $params
+ *
+ * @return array
+ */
+function civicrm_api3_civisocial_user_getTwitterFollowers($params) {
+  $session = CRM_Core_Session::singleton();
+  $response = array();
+
+  $twitterId = $session->get('twitter_id');
+  $twitterAccessToken = $session->get('twitter_access_token');
+  if ($twitterId && $twitterAccessToken) {
+    $twitter = new CRM_Civisocial_OAuthProvider_Twitter($twitterAccessToken);
+    if ($twitter->isAuthorized()) {
+
+      $twitterParams = array();
+      // Do not include tweets
+      $twitterParams['skip_status'] = TRUE;
+      $twitterParams['count'] = 50;
+      if (isset($params['cursor'])) {
+        $twitterParams['cursor'] = $params['cursor'];
+      }
+
+      $result = $twitter->get('followers/list', $twitterParams);
+
+      $response['followers'] = array();
+      foreach ($result['users'] as $user) {
+        $follower = array();
+        $follower['id'] = $user['id'];
+        $follower['screen_name'] = $user['screen_name'];
+        $follower['name'] = $user['name'];
+        $follower['image'] = $user['profile_image_url'];
+
+        array_push($response['followers'], $follower);
+      }
+
+      $response['next'] = $result['next_cursor'];
+      $response['previous'] = $result['previous_cursor'];
 
       return civicrm_api3_create_success($response);
     }

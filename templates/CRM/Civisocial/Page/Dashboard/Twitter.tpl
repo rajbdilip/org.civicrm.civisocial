@@ -54,7 +54,7 @@
   <div id="tabs">
     <ul>
       <li><a href="#tweets-container">Tweets</a></li>
-      <li><a href="#followers">Followers</a></li>
+      <li><a href="#followers-container">Followers</a></li>
     </ul>
 
     <div id="tweets-container">
@@ -80,91 +80,34 @@
         </ul>
       </div>
     </div>
-    <div id="followers">
-      <div class="container">
+    <div id="followers-container">
+      <!-- <div class="container">
         Sort:
         <select id="sort-followers">
           <option value="most-active">Most active</option>
           <option value="alphabetical">Alphabetical</option>
         </select>
-      </div>
+      </div> -->
 
-      <div class="activity follower">
-        <div class="avatar">
-          <img>
-        </div>
-        <div class="info">
-          <div class="name">Dilip Raj Baral</div>
-          <ul class="actions">
-            <li><a href="#">Tweet</a></li>
-            <li><a href="#">View Details</a></li>
-          </ul>
-        </div>
+      <div id="followers">
+        <!-- <div class="activity follower">
+          <div class="avatar">
+            <a href="#"><img></a>
+          </div>
+          <div class="info">
+            <div class="name">Dilip Raj Baral</div>
+            <ul class="actions">
+              <li><a href="#">Tweet</a></li>
+              <li><a href="#">View Details</a></li>
+            </ul>
+          </div>
+        </div> -->
       </div>
-
-      <div class="activity follower">
-        <div class="avatar">
-          <img>
-        </div>
-        <div class="info">
-          <div class="name">Dilip Raj Baral</div>
-          <ul class="actions">
-            <li><a href="#">Tweet</a></li>
-            <li><a href="#">View Details</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="activity follower">
-        <div class="avatar">
-          <img>
-        </div>
-        <div class="info">
-          <div class="name">Dilip Raj Baral</div>
-          <ul class="actions">
-            <li><a href="#">Tweet</a></li>
-            <li><a href="#">View Details</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="activity follower">
-        <div class="avatar">
-          <img>
-        </div>
-        <div class="info">
-          <div class="name">Dilip Raj Baral</div>
-          <ul class="actions">
-            <li><a href="#">Tweet</a></li>
-            <li><a href="#">View Details</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="activity follower">
-        <div class="avatar">
-          <img>
-        </div>
-        <div class="info">
-          <div class="name">Dilip Raj Baral</div>
-          <ul class="actions">
-            <li><a href="#">Tweet</a></li>
-            <li><a href="#">View Details</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="activity follower">
-        <div class="avatar">
-          <img>
-        </div>
-        <div class="info">
-          <div class="name">Dilip Raj Baral</div>
-          <ul class="actions">
-            <li><a href="#">Tweet</a></li>
-            <li><a href="#">View Details</a></li>
-          </ul>
-        </div>
+      <div class="cursor">
+        <ul>
+          <li><a id="followers-prev" href="javascript:void(0);">&laquo;</a>
+          <li><a id="followers-next" href="javascript:void(0);">&raquo;</a>
+        </ul>
       </div>
     </div>
 

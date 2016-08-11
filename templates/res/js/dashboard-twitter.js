@@ -1,8 +1,8 @@
 CRM.$(function($) {
-  var maxId = 0, sinceId = 0;
+  var maxId = 0, sinceId = 0, followesrPrev = 0, followersNext = 0;
 
   $('#tweets-next').click(function() {
-    if (maxId == 0) {
+    if (maxId === 0) {
       getTweets();
     }
     else {
@@ -11,15 +11,20 @@ CRM.$(function($) {
   });
 
   $('#tweets-prev').click(function() {
-    getTweets({'since_id' : sinceId});
+    if (sinceId === 0) {
+      getTweets();
+    }
+    else {
+      getTweets({'since_id' : sinceId});
+    }
   });
 
-  $('#notif-next').click(function() {
-    getNotifs({'next' : notifNext});
+  $('#followers-prev').click(function() {
+    getFollowers({'cursor' : followersPrev});
   });
 
-  $('#notif-prev').click(function() {
-    getNotifs({'prev' : notifPrev});
+  $('#followers-next').click(function() {
+    getFollowers({'cursor' : followersNext});
   });
 
   function getTweets(postData) {
@@ -50,8 +55,14 @@ CRM.$(function($) {
               '</div>'; 
           }
 
+          var retweeted = '';
+          if (typeof tweet.retweeted != 'undefined') {
+            retweeted = '<span class="retweeted">Retweeted</span>';
+          }
+
           var postHtml = '' +
             '<div class="activity">' +
+              retweeted +
               '<div class="avatar">' +
                 '<a target="_blank" href="http://twitter.com/' + tweet.user.screen_name + '"><img src="' + tweet.user.image + '"></a>' +
               '</div>' +
@@ -61,9 +72,9 @@ CRM.$(function($) {
                 quotedStatusHtml +
                 '<span class="activity-status">' + tweet.time + '</span>' +
                 '<ul class="actions">' +
-                  '<li><a target="_blank" href="https://twitter.com/intent/tweet?in_reply_to=' + tweet.id +'">Reply</a></li>' +
-                  '<li><a target="_blank" href="https://twitter.com/intent/retweet?tweet_id=' + tweet.id +'">Retweet</a></li>' +
-                  '<li><a target="_blank" href="https://twitter.com/intent/like?tweet_id=' + tweet.id +'">Like</a></li>' +
+                  '<li><a target="_blank" href="http://twitter.com/intent/tweet?in_reply_to=' + tweet.id +'">Reply</a></li>' +
+                  '<li><a target="_blank" href="http://twitter.com/intent/retweet?tweet_id=' + tweet.id +'">Retweet</a></li>' +
+                  '<li><a target="_blank" href="http://twitter.com/intent/like?tweet_id=' + tweet.id +'">Like</a></li>' +
                 '</ul>' +
               '</div>' +
             '</div>';
@@ -78,30 +89,60 @@ CRM.$(function($) {
     });
   }
 
-  function processAjaxResult(resultType, data, postData) {
-    var nextBtn = $('#' + resultType + '-next').parent();
-    var prevBtn = $('#' + resultType + '-prev').parent();
+  function getFollowers(postData) {
+    postData = postData || {};
+    showLoader($('#followers'));
 
-    if (data.length === 0) {
-      if ('next' in postData) {
-        $(nextBtn).hide();
+    CRM.api3('CivisocialUser', 'gettwitterfollowers', postData).done(function(result) {
+      if (!result.is_error) {
+        // Show hide navigation buttons
+        followersNext = result.values.next;
+        followersPrev = result.values.previous;
+
+        var nextBtn = $('#followers-next').parent();
+        var prevBtn = $('#followers-prev').parent();
+
+        if (followersNext === 0) {
+          $(nextBtn).hide();
+        }
+        else if (followersPrev === 0) {
+          $(prevBtn).hide();
+        }
+        else {
+          $(nextBtn.show());
+          $(prevBtn.show());
+
+        }
+
+        var followers = result.values.followers;
+        for (var i = 0; i < followers.length; i++) {
+          var follower = followers[i];
+
+          var html = '' +
+            '<div class="activity follower">' +
+              '<div class="avatar">' +
+                '<a target="_blank" href="https://twitter.com/' + follower.screen_name + '"><img src="' + follower.image + '"></a>' +
+              '</div>' +
+              '<div class="info">' +
+                '<div class="name"><a target="_blank" href="http://twitter.com/' + follower.screen_name + '">' + follower.name + '</a></div>' +
+                '<ul class="actions">' +
+                  '<li><a target="_blank" href="https://twitter.com/intent/tweet?text=%40' + follower.screen_name + '+">Tweet</a></li>' +
+                '</ul>' +
+              '</div>' +
+            '</div>';
+        
+          $('#followers').append(html);
+        }
+
+        followersNext = result.values.next;
+        followersPrev = result.values.previous;
+
+        hideLoader($('#followers'));
       }
-      else {
-        $(prevBtn).hide();
-      }
-      return;
-    }
-
-    if (!$(nextBtn).is(':visible')) {
-      $(nextBtn).show();
-    }
-    if (!$(prevBtn).is(':visible')) {
-      $(prevBtn).show();
-    }
-
-    $('#' + resultType).empty();
+    });
   }
 
   // Get feed
   getTweets();
+  getFollowers();
 });

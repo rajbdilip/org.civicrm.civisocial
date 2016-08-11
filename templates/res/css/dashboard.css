@@ -67,6 +67,12 @@
   overflow: hidden;
 }
 
+.activity .retweeted {
+  display: block;
+  color: #999;
+  margin-bottom: 10px;
+}
+
 .twitter-activity {
   background-image: url("../img/twitter.svg");
   fill: red;
