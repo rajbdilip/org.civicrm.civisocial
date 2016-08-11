@@ -87,7 +87,7 @@
     </div>
 
     <div class="container">
-      <div class="activity">
+      <!-- <div class="activity">
         <div class="logo bg-twitter"></div>
         <div class="message">
           <a href="#">Someone</a> is now following you.
@@ -117,7 +117,7 @@
             <li><a href="#">Tweet</a></li>
           </ul>
         </div>
-      </div>
+      </div> -->
     </div>
   {/if}
 </div>

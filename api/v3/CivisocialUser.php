@@ -340,7 +340,7 @@ function civicrm_api3_civisocial_user_getTwitterFeed($params) {
           $tweet['retweeted'] = TRUE;
         }
 
-        $tweet['id'] = $tweetItem['id'];
+        $tweet['id'] = $tweetItem['id_str'];
         $tweet['text'] = parseScreenName(urlify($tweetItem['text']));
         $tweet['time'] = date('d M, Y H:i:A', strtotime($tweetItem['created_at']));
         $tweet['user'] = array();
@@ -410,7 +410,7 @@ function civicrm_api3_civisocial_user_getTwitterFollowers($params) {
       $response['followers'] = array();
       foreach ($result['users'] as $user) {
         $follower = array();
-        $follower['id'] = $user['id'];
+        $follower['id'] = $user['id_str'];
         $follower['screen_name'] = $user['screen_name'];
         $follower['name'] = $user['name'];
         $follower['image'] = $user['profile_image_url'];
